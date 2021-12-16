@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using MovieAPI.Models;
+using MovieAPI.Interfaces;
+using MovieAPI.Repositories;
 
 namespace MovieAPI {
   public class Startup {
@@ -23,6 +27,17 @@ namespace MovieAPI {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
       services.AddControllers();
+
+      services.AddDbContext<MovieContext>( options =>
+        options.UseMySQL(Configuration["MySQL:ConnectionString"])
+      );
+
+      services.AddScoped<IMovieRepository, MovieRepository>();
+
+      services.AddCors(c => {
+        c.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+      });
+
       services.AddSwaggerGen(c => {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieAPI", Version = "v1" });
       });
@@ -37,6 +52,8 @@ namespace MovieAPI {
       }
 
       app.UseHttpsRedirection();
+
+      app.UseCors("AllowOrigin");
 
       app.UseRouting();
 
