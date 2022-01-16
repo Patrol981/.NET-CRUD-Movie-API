@@ -51,7 +51,7 @@ namespace MovieAPI.Tests {
         Director = "Damian Dolata",
         ProductionYear = System.DateTime.Now,
         MovieLength = "03:25:00",
-        MovieTitle = "Jebane studia",
+        MovieTitle = "siema",
       };
 
       var controller = new MovieController(_repository.Object, _logger.Object);
@@ -62,7 +62,7 @@ namespace MovieAPI.Tests {
       Assert.NotNull(createdMovie);
       Assert.Equal("Damian Dolata", createdMovie.Director);
       Assert.Equal("03:25:00", createdMovie.MovieLength);
-      Assert.Equal("Jebane studia", createdMovie.MovieTitle);
+      Assert.Equal("siema", createdMovie.MovieTitle);
     }
   }
 }
