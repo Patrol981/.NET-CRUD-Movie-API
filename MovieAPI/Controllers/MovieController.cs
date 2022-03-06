@@ -1,27 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
 using MovieAPI.Models;
 using MovieAPI.Interfaces;
+using MovieAPI.Validators;
+using MovieAPI.Enums;
 
 namespace MovieAPI.Controllers {
   [Route("api/[controller]")]
   [ApiController]
-  public class MovieController: ControllerBase {
+  public class MovieController : ControllerBase {
     private readonly IMovieRepository _movieRepo;
+    private readonly IDirectorRepository _directorRepo;
     private readonly ILogger _logger;
-    public MovieController(IMovieRepository movieRepo, ILogger<MovieController> logger) {
+    public MovieController(IMovieRepository movieRepo, IDirectorRepository directorRepo, ILogger<MovieController> logger) {
       _movieRepo = movieRepo;
+      _directorRepo = directorRepo;
       _logger = logger;
     }
 
     [HttpPost]
     public async Task<IActionResult> PostMovie(Movie movie) {
+      if(MovieValidator.CheckMovie(movie) == EValidator.InValid) return BadRequest(movie);
+      if(await _directorRepo.GetDirector(movie.Director) == null) return NotFound(movie.Director);
       var isExist = _movieRepo.GetMovieByTitle(movie.MovieTitle);
       if(isExist != null) {
         return Conflict();
@@ -56,11 +58,12 @@ namespace MovieAPI.Controllers {
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMovie(Guid id, Movie movie) {
+      if(MovieValidator.CheckMovie(movie) == EValidator.InValid) return BadRequest(movie);
       var isExist = await _movieRepo.GetMovie(id);
       if(isExist == null) {
         return NotFound();
       }
-      return Ok(await _movieRepo.UpdateMovie(id, movie));
+      return new OkObjectResult(await _movieRepo.UpdateMovie(id, movie));
     }
   }
 }

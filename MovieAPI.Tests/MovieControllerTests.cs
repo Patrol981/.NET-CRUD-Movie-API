@@ -51,7 +51,7 @@ namespace MovieAPI.Tests {
         Director = "Damian Dolata",
         ProductionYear = System.DateTime.Now,
         MovieLength = "03:25:00",
-        MovieTitle = "Jebane studia",
+        MovieTitle = "Piwo",
       };
 
       var controller = new MovieController(_repository.Object, _logger.Object);
@@ -62,7 +62,38 @@ namespace MovieAPI.Tests {
       Assert.NotNull(createdMovie);
       Assert.Equal("Damian Dolata", createdMovie.Director);
       Assert.Equal("03:25:00", createdMovie.MovieLength);
-      Assert.Equal("Jebane studia", createdMovie.MovieTitle);
+      Assert.Equal("Piwo", createdMovie.MovieTitle);
+    }
+
+    [Fact]
+    public async Task UpdateMovie_OnEdit_ShouldReturnDiffrentData() {
+      var movie = new Movie() {
+        Director = "Damian Dolata",
+        ProductionYear = System.DateTime.Now,
+        MovieLength = "03:25:00",
+        MovieTitle = "Piwo",
+      };
+      var movieUpdate = new Movie() {
+        Director = "Kacper Adler",
+        ProductionYear = System.DateTime.MaxValue,
+        MovieLength = "03:00:00",
+        MovieTitle = "Volkswagen Polo",
+      };
+
+      _repository.Setup(repo => repo.GetMovie(It.IsAny<Guid>()))
+                 .ReturnsAsync(movie);
+
+      var movieID = movie.MovieID;
+
+      var controller = new MovieController(_repository.Object, _logger.Object);
+
+
+      var updateResult = await controller.UpdateMovie(movieID, movieUpdate);
+
+
+      Assert.IsType<OkObjectResult>(updateResult);
+      Assert.NotNull(updateResult);
+
     }
   }
 }

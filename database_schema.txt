@@ -1,0 +1,36 @@
+Tabele
+
+Filmy
+Seriale
+Reżyserzy
+FilmySeriale - W:W
+
+Design Tabel:
+
+Filmy:
+
+MovieID : int (PK)
+ProductionYear : DateTime
+Director : int (FK)
+MovieTitile : text
+MovieLength : text
+
+Seriale
+
+SerialID : int (PK)
+ProductionYear : DateTime
+Director : int (FK)
+SerialTitile : text
+SerialEpisodes : int
+
+Reżyserzy:
+
+DirectorID : int (PK)
+Firstname : varchar(24)
+Lastname : varchar(24)
+
+
+FilmySeriale:
+
+SerialID : int (FK)
+MovieID : int (FK)

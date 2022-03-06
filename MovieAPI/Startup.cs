@@ -28,11 +28,13 @@ namespace MovieAPI {
     public void ConfigureServices(IServiceCollection services) {
       services.AddControllers();
 
-      services.AddDbContext<MovieContext>( options =>
-        options.UseMySQL(Configuration["MySQL:ConnectionString"])
+      services.AddDbContext<DBContext>( options =>
+        options.UseMySQL(Configuration.GetConnectionString("MySQL"))
       );
 
       services.AddScoped<IMovieRepository, MovieRepository>();
+      services.AddScoped<IDirectorRepository, DirectorRepository>();
+      services.AddScoped<ISerialRepository, SerialRepository>();
 
       services.AddCors(c => {
         c.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

@@ -4,20 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MovieAPI.Repositories {
-  public class MovieRepository: IMovieRepository {
-    private readonly MovieContext _movieContext;
-    public MovieRepository(MovieContext movieContext) {
-      _movieContext = movieContext;
+  public class MovieRepository : IMovieRepository {
+    private readonly DBContext _dbContext;
+    public MovieRepository(DBContext dbContext) {
+      _dbContext = dbContext;
     }
     public List<Movie> GetMovies() {
-      return _movieContext.Movies.ToList();
+      return _dbContext.Movies.ToList();
     }
 
     public async Task<Movie> GetMovie(Guid id) {
-      var movie = await _movieContext.Movies.FindAsync(id);
+      var movie = await _dbContext.Movies.FindAsync(id);
       if(movie == null) {
         return null;
       }
@@ -25,7 +24,7 @@ namespace MovieAPI.Repositories {
     }
 
     public Movie GetMovieByTitle(string title) {
-      var movie = _movieContext.Movies.SingleOrDefault(x => x.MovieTitle == title);
+      var movie = _dbContext.Movies.SingleOrDefault(x => x.MovieTitle == title);
       if(movie == null) {
         return null;
       }
@@ -33,25 +32,27 @@ namespace MovieAPI.Repositories {
     }
 
     public async Task<Movie> AddMovie(Movie movie) {
-      await _movieContext.Movies.AddAsync(movie);
-      await _movieContext.SaveChangesAsync();
+      await _dbContext.Movies.AddAsync(movie);
+      await _dbContext.SaveChangesAsync();
       return movie;
     }
 
     public async void DeleteMovie(Movie movie) {
-      _movieContext.Movies.Remove(movie);
-      await _movieContext.SaveChangesAsync();
+      var itemsRelated = _dbContext.MoviesSerials.Where(x => x.MovieID == movie.MovieID).ToList();
+      _dbContext.MoviesSerials.RemoveRange(itemsRelated);
+      _dbContext.Movies.Remove(movie);
+      await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Movie> UpdateMovie(Guid id, Movie movie) {
-      var existingMovie = await _movieContext.Movies.FindAsync(id);
+      var existingMovie = await _dbContext.Movies.FindAsync(id);
       if(existingMovie != null) {
         existingMovie.Director = movie.Director;
         existingMovie.MovieLength = movie.MovieLength;
         existingMovie.MovieTitle = movie.MovieTitle;
         existingMovie.ProductionYear = movie.ProductionYear;
-        _movieContext.Movies.Update(existingMovie);
-        await _movieContext.SaveChangesAsync();
+        _dbContext.Movies.Update(existingMovie);
+        await _dbContext.SaveChangesAsync();
       }
       return movie;
     }

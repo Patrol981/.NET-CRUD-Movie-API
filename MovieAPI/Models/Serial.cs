@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System;
 
 namespace MovieAPI.Models {
-  [Table("Movies")]
-  public class Movie {
+  [Table("Serials")]
+  public class Serial {
     [Key]
-    public Guid MovieID {get; private init;}
+    public Guid SerialID {get; private init;}
 
     [Required]
     public System.DateTime ProductionYear {get; set;}
@@ -15,9 +15,9 @@ namespace MovieAPI.Models {
     public Guid Director {get; set;}
 
     [Required]
-    public float MovieLength {get; set;}
+    public int SerialEpisodes {get; set;}
 
     [Required]
-    public string MovieTitle {get; set;}
+    public string SerialTitle {get; set;}
   }
 }
