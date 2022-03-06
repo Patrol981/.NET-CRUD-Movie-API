@@ -51,7 +51,11 @@ namespace MovieAPI.Tests {
         Director = "Damian Dolata",
         ProductionYear = System.DateTime.Now,
         MovieLength = "03:25:00",
+<<<<<<< HEAD
         MovieTitle = "Piwo",
+=======
+        MovieTitle = "siema",
+>>>>>>> 68b78d67d93743c6297e5accd2bc54ecf6e88df3
       };
 
       var controller = new MovieController(_repository.Object, _logger.Object);
@@ -62,6 +66,7 @@ namespace MovieAPI.Tests {
       Assert.NotNull(createdMovie);
       Assert.Equal("Damian Dolata", createdMovie.Director);
       Assert.Equal("03:25:00", createdMovie.MovieLength);
+<<<<<<< HEAD
       Assert.Equal("Piwo", createdMovie.MovieTitle);
     }
 
@@ -94,6 +99,9 @@ namespace MovieAPI.Tests {
       Assert.IsType<OkObjectResult>(updateResult);
       Assert.NotNull(updateResult);
 
+=======
+      Assert.Equal("siema", createdMovie.MovieTitle);
+>>>>>>> 68b78d67d93743c6297e5accd2bc54ecf6e88df3
     }
   }
 }
