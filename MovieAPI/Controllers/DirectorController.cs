@@ -38,7 +38,7 @@ namespace MovieAPI.Controllers {
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Director>> GetDirector(Guid id) {
+    public async Task<IActionResult> GetDirector(Guid id) {
       var isExist = await _directorRepo.GetDirector(id);
       if(isExist == null) {
         return NotFound();
@@ -46,9 +46,19 @@ namespace MovieAPI.Controllers {
       return Ok(isExist);
     }
 
-    [HttpGet("{id}/GetDirectorWorks/")]
-    public async Task<ActionResult<MovieSerial>> GetDirectorWorks(Guid id) {
-      return Ok(await _directorRepo.GetDirectorWorks(id));
+    [HttpGet("{id}/GetDirectorMovies/")]
+    public IActionResult GetDirectorMovies(Guid id) {
+      return Ok(_directorRepo.GetDirectorMovies(id));
+    }
+
+    [HttpGet("{id}/GetDirectorSerials/")]
+    public IActionResult GetDirectorSerials(Guid id) {
+      return Ok(_directorRepo.GetDirectorSerials(id));
+    }
+
+    [HttpGet("GetDirectorByName/{firstname}/{lastname}")]
+    public IActionResult GetDirectorByName(string firstname, string lastname) {
+      return Ok(_directorRepo.GetDirectorByName(firstname, lastname));
     }
 
     [HttpDelete("{id}")]

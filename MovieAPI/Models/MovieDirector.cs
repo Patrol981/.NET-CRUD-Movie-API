@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System;
 
 namespace MovieAPI.Models {
-  [Table("MovieSerial")]
-  public class MovieSerial {
+  [Table("MovieDirector")]
+  public class MovieDirector {
     [Key]
+    public Guid InstanceID {get; private init;}
     public Guid DirectorID {get; set;}
     public Guid MovieID {get; set;}
-    public Guid SerialID {get; set;}
   }
 }

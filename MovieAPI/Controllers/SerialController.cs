@@ -36,7 +36,7 @@ namespace MovieAPI.Controllers {
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Movie>> GetSerial(Guid id) {
+    public async Task<IActionResult> GetSerial(Guid id) {
       var isExist = await _serialRepo.GetSerial(id);
       if(isExist == null) {
         return NotFound();

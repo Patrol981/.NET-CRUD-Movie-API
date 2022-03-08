@@ -33,13 +33,17 @@ namespace MovieAPI.Repositories {
 
     public async Task<Movie> AddMovie(Movie movie) {
       await _dbContext.Movies.AddAsync(movie);
+      var movieDirector = new MovieDirector();
+      movieDirector.DirectorID = movie.DirectorID;
+      movieDirector.MovieID = movie.MovieID;
+      await _dbContext.MovieDirectors.AddAsync(movieDirector);
       await _dbContext.SaveChangesAsync();
       return movie;
     }
 
     public async void DeleteMovie(Movie movie) {
-      var itemsRelated = _dbContext.MoviesSerials.Where(x => x.MovieID == movie.MovieID).ToList();
-      _dbContext.MoviesSerials.RemoveRange(itemsRelated);
+      var moviesRelated = _dbContext.MovieDirectors.Where(x => x.MovieID == movie.MovieID).ToList();
+      _dbContext.MovieDirectors.RemoveRange(moviesRelated);
       _dbContext.Movies.Remove(movie);
       await _dbContext.SaveChangesAsync();
     }
@@ -47,11 +51,18 @@ namespace MovieAPI.Repositories {
     public async Task<Movie> UpdateMovie(Guid id, Movie movie) {
       var existingMovie = await _dbContext.Movies.FindAsync(id);
       if(existingMovie != null) {
-        existingMovie.Director = movie.Director;
+
+        var existingMovieDirector = _dbContext.MovieDirectors.Where
+          (x => x.MovieID == existingMovie.MovieID).FirstOrDefault();
+        existingMovieDirector.DirectorID = movie.DirectorID;
+        _dbContext.MovieDirectors.Update(existingMovieDirector);
+
+        existingMovie.DirectorID = movie.DirectorID;
         existingMovie.MovieLength = movie.MovieLength;
         existingMovie.MovieTitle = movie.MovieTitle;
         existingMovie.ProductionYear = movie.ProductionYear;
         _dbContext.Movies.Update(existingMovie);
+
         await _dbContext.SaveChangesAsync();
       }
       return movie;

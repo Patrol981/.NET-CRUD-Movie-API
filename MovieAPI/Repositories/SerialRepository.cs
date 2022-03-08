@@ -14,13 +14,17 @@ namespace MovieAPI.Repositories {
     }
     public async Task<Serial> AddSerial(Serial serial) {
       await _dbContext.Serials.AddAsync(serial);
+      var serialDirector = new SerialDirector();
+      serialDirector.DirectorID = serial.DirectorID;
+      serialDirector.SerialID = serial.SerialID;
+      await _dbContext.SerialDirectors.AddAsync(serialDirector);
       await _dbContext.SaveChangesAsync();
       return serial;
     }
 
     public async void DeleteSerial(Serial serial) {
-      var itemsRelated = _dbContext.MoviesSerials.Where(x => x.SerialID == serial.SerialID).ToList();
-      _dbContext.MoviesSerials.RemoveRange(itemsRelated);
+      var serialsRelated = _dbContext.SerialDirectors.Where(x => x.SerialID == serial.SerialID).ToList();
+      _dbContext.SerialDirectors.RemoveRange(serialsRelated);
       _dbContext.Serials.Remove(serial);
       await _dbContext.SaveChangesAsync();
     }
@@ -48,7 +52,13 @@ namespace MovieAPI.Repositories {
     public async Task<Serial> UpdateSerial(Guid id, Serial serial) {
       var existingSerial = await _dbContext.Serials.FindAsync(id);
       if(existingSerial != null) {
-        existingSerial.Director = serial.Director;
+
+        var existingSerialDirector = _dbContext.SerialDirectors.Where
+          (x => x.SerialID == existingSerial.SerialID).FirstOrDefault();
+        existingSerialDirector.DirectorID = serial.DirectorID;
+        _dbContext.SerialDirectors.Update(existingSerialDirector);
+
+        existingSerial.DirectorID = serial.DirectorID;
         existingSerial.SerialEpisodes = serial.SerialEpisodes;
         existingSerial.SerialTitle = serial.SerialTitle;
         existingSerial.ProductionYear = serial.ProductionYear;

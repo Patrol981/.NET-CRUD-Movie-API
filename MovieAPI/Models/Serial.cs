@@ -12,7 +12,7 @@ namespace MovieAPI.Models {
     public System.DateTime ProductionYear {get; set;}
 
     [Required]
-    public Guid Director {get; set;}
+    public Guid DirectorID {get; set;}
 
     [Required]
     public int SerialEpisodes {get; set;}

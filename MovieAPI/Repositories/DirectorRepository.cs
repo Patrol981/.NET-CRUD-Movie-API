@@ -18,8 +18,22 @@ public class DirectorRepository : IDirectorRepository {
   }
 
   public async void DeleteDirector(Director director) {
-    var itemsRelated = _dbContext.MoviesSerials.Where(x => x.DirectorID == director.DirectorID).ToList();
-    _dbContext.MoviesSerials.RemoveRange(itemsRelated);
+    /*
+    not sure what's better delete movies and serials if director is deleted or leave it be
+
+    var moviesRelated = _dbContext.Movies.Where(x => x.DirectorID == director.DirectorID).ToList();
+    _dbContext.Movies.RemoveRange(moviesRelated);
+
+    var serialsRelated = _dbContext.Serials.Where(x => x.DirectorID == director.DirectorID).ToList();
+    _dbContext.Serials.RemoveRange(serialsRelated);
+    */
+
+    var directorSerials = _dbContext.SerialDirectors.Where(x => x.DirectorID == director.DirectorID).ToList();
+    _dbContext.SerialDirectors.RemoveRange(directorSerials);
+
+    var directorMovies = _dbContext.MovieDirectors.Where(x => x.DirectorID == director.DirectorID).ToList();
+    _dbContext.MovieDirectors.RemoveRange(directorMovies);
+
     _dbContext.Directors.Remove(director);
     await _dbContext.SaveChangesAsync();
   }
@@ -53,11 +67,11 @@ public class DirectorRepository : IDirectorRepository {
     return director;
   }
 
-  public async Task<MovieSerial> GetDirectorWorks(Guid id) {
-    var serials = await _dbContext.Serials.FindAsync(id);
-    var movies = await _dbContext.Movies.FindAsync(id);
-    Console.WriteLine(serials);
-    Console.WriteLine(movies);
-    return null;
+  public List<MovieDirector> GetDirectorMovies(Guid id) {
+    return _dbContext.MovieDirectors.Where(x => x.DirectorID == id).ToList();
+  }
+
+  public List<SerialDirector> GetDirectorSerials(Guid id) {
+    return _dbContext.SerialDirectors.Where(x => x.DirectorID == id).ToList();
   }
 }
