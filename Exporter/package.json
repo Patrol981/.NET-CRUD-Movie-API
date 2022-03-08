@@ -1,0 +1,16 @@
+{
+  "name": "Exporter",
+  "version": "1.0.0",
+  "description": "Export program for MovieAPI",
+  "main": "export.js",
+  "author": "Patryk Markowski",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node export.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "cross-fetch": "^3.1.5"
+  }
+}

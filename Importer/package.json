@@ -1,0 +1,16 @@
+{
+  "name": "Importer",
+  "version": "1.0.0",
+  "description": "Import program for MovieAPI",
+  "main": "import.js",
+  "author": "Patryk Markowski",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node import.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "cross-fetch": "^3.1.5"
+  }
+}
