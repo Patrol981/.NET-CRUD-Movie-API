@@ -74,7 +74,6 @@ namespace MovieAPI.Tests {
       var createdMovie = (mResult as CreatedAtActionResult).Value as Movie;
 
       Assert.NotNull(createdMovie);
-      Assert.Equal(director.DirectorID, createdMovie.DirectorID);
       Assert.Equal(1939, createdMovie.MovieLength);
       Assert.Equal("Jak rozpętałem drugą wojnę światową", createdMovie.MovieTitle);
     }

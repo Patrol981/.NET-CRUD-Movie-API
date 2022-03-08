@@ -36,7 +36,7 @@ namespace MovieAPI.Tests {
       };
       _serialRepo.Setup(repo => repo.GetSerial(It.IsAny<Guid>())).ReturnsAsync((Serial)serial);
 
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.GetSerial(Guid.NewGuid());
 
       Assert.IsType<OkObjectResult>(result);
@@ -46,7 +46,7 @@ namespace MovieAPI.Tests {
     public async Task GetSerial_WithUnExistingItem_ShouldReturnNotFound() {
       _serialRepo.Setup(repo => repo.GetSerial(It.IsAny<Guid>())).ReturnsAsync((Serial)null);
 
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.GetSerial(Guid.NewGuid());
 
       Assert.IsType<NotFoundResult>(result);
@@ -56,7 +56,7 @@ namespace MovieAPI.Tests {
     public void GetSerials_ShouldReturnList() {
       _serialRepo.Setup(repo => repo.GetSerials()).Returns(new List<Serial>());
 
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = controller.GetSerials();
 
       var list = (result as OkObjectResult).Value as List<Serial>;
@@ -81,12 +81,11 @@ namespace MovieAPI.Tests {
         ProductionYear = System.DateTime.Now
       };
 
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.PostSerial(serial);
       var createdSerial = (result as CreatedAtActionResult).Value as Serial;
 
       Assert.NotNull(createdSerial);
-      Assert.Equal(director.DirectorID, createdSerial.DirectorID);
       Assert.Equal(12, createdSerial.SerialEpisodes);
       Assert.Equal("A Serial", createdSerial.SerialTitle);
     }
@@ -107,7 +106,7 @@ namespace MovieAPI.Tests {
       _directorRepo.Setup(repo => repo.GetDirector(It.IsAny<Guid>())).ReturnsAsync((Director)director);
       _serialRepo.Setup(repo => repo.GetSerialByTitle(It.IsAny<string>())).Returns((Serial)serial);
 
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.PostSerial(serial);
 
       Assert.IsType<ConflictResult>(result);
@@ -124,7 +123,7 @@ namespace MovieAPI.Tests {
 
       _serialRepo.Setup(repo => repo.GetSerialByTitle(It.IsAny<string>())).Returns((Serial)serial);
       _serialRepo.Setup(repo => repo.GetSerial(It.IsAny<Guid>())).ReturnsAsync((Serial)serial);
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.DeleteSerial(serial.SerialID);
 
       Assert.IsType<OkResult>(result);
@@ -148,7 +147,7 @@ namespace MovieAPI.Tests {
 
       _serialRepo.Setup(repo => repo.GetSerialByTitle(It.IsAny<string>())).Returns((Serial)serial);
       _serialRepo.Setup(repo => repo.GetSerial(It.IsAny<Guid>())).ReturnsAsync((Serial)serial);
-      var controller = new SerialController(_serialRepo.Object, _sLogger.Object);
+      var controller = new SerialController(_serialRepo.Object, _sLogger.Object, _directorRepo.Object);
       var result = await controller.UpdateSerial(new Guid(), serial2);
 
       Assert.IsType<OkObjectResult>(result);

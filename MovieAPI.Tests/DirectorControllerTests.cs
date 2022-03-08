@@ -68,6 +68,11 @@ namespace MovieAPI.Tests {
         Lastname = "Matuszczak"
       };
 
+      _directorRepo.Setup(repo => repo.GetDirectorByName(It.IsAny<string>(), It.IsAny<string>()))
+        .Returns((Director)null);
+      _directorRepo.Setup(repo => repo.GetDirector(It.IsAny<Guid>()))
+        .ReturnsAsync((Director)null);
+
       var controller = new DirectorController(_directorRepo.Object, _dLogger.Object);
       var result = await controller.PostDirector(director);
 
