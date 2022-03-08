@@ -21,9 +21,11 @@ namespace MovieAPI.Controllers {
 
     [HttpPost]
     public async Task<IActionResult> PostDirector(Director director) {
+      director.DirectorID = Guid.NewGuid();
       if(DirectorValidator.CheckDirector(director) == EValidator.InValid) {
         return BadRequest(director);
       }
+      if(await _directorRepo.GetDirector(director.DirectorID) != null) return Conflict();
       var isExist = _directorRepo.GetDirectorByName(director.Firstname, director.Lastname);
       if(isExist != null) {
         return Conflict();

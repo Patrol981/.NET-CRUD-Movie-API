@@ -6,7 +6,7 @@ namespace MovieAPI.Models {
   [Table("Movies")]
   public class Movie {
     [Key]
-    public Guid MovieID {get; private init;}
+    public Guid MovieID {get; internal set;}
 
     [Required]
     public System.DateTime ProductionYear {get; set;}

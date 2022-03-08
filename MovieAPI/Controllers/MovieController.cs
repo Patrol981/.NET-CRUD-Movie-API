@@ -22,7 +22,9 @@ namespace MovieAPI.Controllers {
 
     [HttpPost]
     public async Task<IActionResult> PostMovie(Movie movie) {
+      movie.DirectorID = Guid.NewGuid();
       if(MovieValidator.CheckMovie(movie) == EValidator.InValid) return BadRequest(movie);
+      if(await _movieRepo.GetMovie(movie.DirectorID) != null) return Conflict();
       if(await _directorRepo.GetDirector(movie.DirectorID) == null) return NotFound(movie.DirectorID);
       var isExist = _movieRepo.GetMovieByTitle(movie.MovieTitle);
       if(isExist != null) {

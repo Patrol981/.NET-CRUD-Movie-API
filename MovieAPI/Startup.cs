@@ -35,6 +35,7 @@ namespace MovieAPI {
       services.AddScoped<IMovieRepository, MovieRepository>();
       services.AddScoped<IDirectorRepository, DirectorRepository>();
       services.AddScoped<ISerialRepository, SerialRepository>();
+      services.AddScoped<IImportRepoository, ImportRepository>();
 
       services.AddCors(c => {
         c.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
