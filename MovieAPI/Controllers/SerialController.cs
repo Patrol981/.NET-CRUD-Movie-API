@@ -23,7 +23,7 @@ namespace MovieAPI.Controllers {
 
     [HttpPost]
     public async Task<IActionResult> PostSerial(Serial serial) {
-      serial.DirectorID = Guid.NewGuid();
+      serial.SerialID = Guid.NewGuid();
       if(SerialValidator.CheckSerial(serial) == EValidator.InValid) return BadRequest(serial);
       if(await _directorRepo.GetDirector(serial.DirectorID) == null) return NotFound(serial.DirectorID);
       if(await _serialRepo.GetSerial(serial.SerialID) != null) return Conflict();
