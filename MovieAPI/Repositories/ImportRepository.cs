@@ -21,6 +21,10 @@ public class ImportRepository : IImportRepoository {
 
   public async Task<ImportMovie> ImportMovie(ImportMovie importMovie) {
     Movie movie = importMovie.CastToAnother<Movie>();
+    var movieDirector = new MovieDirector();
+    movieDirector.DirectorID = movie.DirectorID;
+    movieDirector.MovieID = movie.MovieID;
+    await _dbContext.MovieDirectors.AddAsync(movieDirector);
     await _dbContext.Movies.AddAsync(movie);
     await _dbContext.SaveChangesAsync();
     return importMovie;
@@ -29,6 +33,10 @@ public class ImportRepository : IImportRepoository {
   public async Task<ImportSerial> ImportSerial(ImportSerial importSerial) {
     Serial serial = importSerial.CastToAnother<Serial>();
     await _dbContext.Serials.AddAsync(serial);
+    var serialDirector = new SerialDirector();
+    serialDirector.DirectorID = serial.DirectorID;
+    serialDirector.SerialID = serial.SerialID;
+    await _dbContext.SerialDirectors.AddAsync(serialDirector);
     await _dbContext.SaveChangesAsync();
     return importSerial;
   }
