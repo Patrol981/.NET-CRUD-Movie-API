@@ -137,5 +137,35 @@ namespace MovieAPI.Tests {
 
       Assert.IsType<OkObjectResult>(result);
     }
+
+    [Fact]
+    public void GetDirectorMovies_ShouldRetrunList() {
+      List<MovieDirector> movieDirectors = new List<MovieDirector>();
+      _directorRepo.Setup(repo => repo.GetDirectorMovies(It.IsAny<Guid>()))
+        .Returns((List<MovieDirector>)movieDirectors);
+
+      var controller = new DirectorController(_directorRepo.Object, _dLogger.Object);
+      var result = controller.GetDirectorMovies(Guid.NewGuid());
+
+      var list = (result as OkObjectResult).Value as List<MovieDirector>;
+
+
+      Assert.IsType<List<MovieDirector>>(list);
+    }
+
+    [Fact]
+    public void GetDirectorSerials_ShouldRetrunList() {
+      List<SerialDirector> serialsDirectors = new List<SerialDirector>();
+      _directorRepo.Setup(repo => repo.GetDirectorSerials(It.IsAny<Guid>()))
+        .Returns((List<SerialDirector>)serialsDirectors);
+
+      var controller = new DirectorController(_directorRepo.Object, _dLogger.Object);
+      var result = controller.GetDirectorSerials(Guid.NewGuid());
+
+      var list = (result as OkObjectResult).Value as List<SerialDirector>;
+
+
+      Assert.IsType<List<SerialDirector>>(list);
+    }
   }
 }
