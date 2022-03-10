@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import fetchData from './utils/fetchData.js';
 import fs from 'fs';
 
@@ -7,7 +8,7 @@ let directors;
 let movies;
 let serials;
 
-const url = "http://localhost:5000/api";
+const url = `${process.env.URL}/api`;
 
 directors = await fetchData(`${url}/Director`);
 movies = await fetchData(`${url}/Movie`);

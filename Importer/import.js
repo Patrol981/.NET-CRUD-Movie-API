@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import postData from './utils/addData.js';
 import fs from 'fs';
 import ImportDirector from './models/ImportDirector.js';
@@ -11,7 +12,7 @@ const directors = jsonObject.directors;
 const movies = jsonObject.movies;
 const serials = jsonObject.serials;
 
-const url = "http://localhost:5000/api/Import";
+const url = `${process.env.URL}/api/Import`;
 
 main();
 
